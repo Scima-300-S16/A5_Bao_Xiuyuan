@@ -29,7 +29,7 @@ PFont plotFont;
 void setup() {
   size(720, 405);
   //canvas size
-  data = new FloatTable("milk-tea-coffee.tsv");
+  data = new FloatTable("data.tsv");
   //get data from the file
   rowCount = data.getRowCount();
   columnCount = data.getColumnCount();
@@ -87,8 +87,38 @@ void draw() {
   fill(#FF4C33);
   //have the color
   drawDataArea(currentColumn);
+  noStroke();
+  fill(25,25,255);
+
   //use the function to draw data
   //function defined at the bottom
+  
+  textSize(10);
+  fill(75);
+  text("2006",190,350);
+  text("2008",305,350);
+  text("2010",420,350);
+  text("2012",535,350);
+  text("2014",650,350);
+  
+  text("10",110,300);
+  text("20",110,240);
+  text("30",110,180);
+  text("40",110,120);
+  
+  fill(255,0,0,125);
+  ellipse(119.5,79,10,10);
+  ellipse(177.5,81,10,10);
+  ellipse(235.2,74,10,10);
+  ellipse(293,74,10,10);
+  ellipse(351,84,10,10);
+  ellipse(409,93,10,10);
+  ellipse(467,91,10,10);
+  ellipse(525,89,10,10);
+  ellipse(583,79,10,10);
+  ellipse(640,78,10,10);
+  
+
 }
 
 void drawTitleTabs() {
@@ -145,13 +175,16 @@ void drawAxisLabels() {
   textLeading(15);
 
   textAlign(CENTER, CENTER);
-  text("Mood\nRange 0-100", labelX, (plotY1+plotY2)/2);
+  text("Amount\n (thousand)", labelX, (plotY1+plotY2)/2);
   textAlign(CENTER);
-  text("Time", (plotX1+plotX2)/2, labelY);
+  text("Year", (plotX1+plotX2)/2, labelY-10);
+  fill(128);
+  text("San Francisco",(plotX1+plotX2)/2, labelY+5);
+  text("Data from DepartmentOfNumbers",(plotX1+plotX2)/2+225, labelY+5);
 }
 
 void drawYearLabels() {
-  fill(0);
+  fill(224);
   textSize(10);
   textAlign(CENTER);
 
@@ -162,14 +195,14 @@ void drawYearLabels() {
   for (int row = 0; row<rowCount; row++) {
     if (years[row]% yearInterval ==0) {
       float x = map(years[row], yearMin, yearMax, plotX1, plotX2);
-      text(years[row],x, plotY2+textAscent()+10);
+      text(years[row],x, plotY2+textAscent()+2);
       line(x, plotY1, x, plotY2);
     }
   }
 }
 
 void drawVolumeLabels() {
-  fill(0);
+  fill(224);
   textSize(10);
   textAlign(RIGHT);
 
@@ -196,26 +229,40 @@ void drawVolumeLabels() {
 }
 void drawDataArea(int col) {
   //use vertex to connect all points to draw the shape
-
-  for (int row=0; row<rowCount; row++) {
-    if (data.isValid(row, col)) {
-      float value = interpolators[row].value;
-      //use map function to take the range of the data and map them to the chart box
-      float x = map(years[row], yearMin, yearMax, plotX1, plotX2);
-      float y = map(value, dataMin, dataMax, plotY2, plotY1);
-      
-      int inc = row +1;
-      if(inc>rowCount-1){
-        inc = 0;
+  if (col == 2 || col ==3 ){
+    for (int row=0; row<rowCount; row++) {
+      if (data.isValid(row, 1)) {
+        float value = interpolators[row].value;
+        //use map function to take the range of the data and map them to the chart box
+        float x = map(years[row], yearMin, yearMax, plotX1, plotX2);
+        float y = map(value, dataMin, dataMax, plotY2, plotY1);
+        fill(255,0,0);
+        ellipse(x,y,10,10);
       }
-      float x2 = map(years[inc], yearMin, yearMax, plotX1, plotX2);
-      float y2 = map(value, dataMin, dataMax, plotY2, plotY1);
-      
-      vertex(x, y);
-      line(x,y,x2,y2);
-      point(x,y);
-      ellipse(x,y,10,10);
+    }
+    for (int row=0; row<rowCount; row++) {
+      if (data.isValid(row, col )) {
+        float value = interpolators[row].value;
+        //use map function to take the range of the data and map them to the chart box
+        float x1 = map(years[row], yearMin, yearMax, plotX1, plotX2);
+        float y1 = map(value, dataMin, dataMax, plotY2, plotY1);
+        fill(0,0,255);
+        ellipse(x1,y1,10,10);
+      }
     }
   }
+  else {
+    for (int row=0; row<rowCount; row++) {
+      if (data.isValid(row, col)) {
+        float value = interpolators[row].value;
+        //use map function to take the range of the data and map them to the chart box
+        float x = map(years[row], yearMin, yearMax, plotX1, plotX2);
+        float y = map(value, dataMin, dataMax, plotY2, plotY1);
+        fill(0,0,255);
+        ellipse(x,y,10,10);
+  }
+    }
+        
 
+}
 }
